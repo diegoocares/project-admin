@@ -136,4 +136,21 @@ class AdminController extends Controller
 
         return Redirect::route('showEmpleados');
     }
+
+    public function updateEmpleado($id){
+        $empleado = empleados::find($id);
+        return view('admin.updateEmpleado', ['empleado' => $empleado]);
+    }
+
+    public function saveUpdateEmpleado(Request $request, $id){
+        $empleado = empleados::find($id);
+
+        $empleado->update([
+            'nombre' => $request->input('nombre'),
+            'email' => $request->input('email'),
+            'fecha_contratacion' => $request->input('fecha_contratacion'),
+        ]);
+
+        return Redirect::route('showEmpleados')->with('success', 'Empleado actualizado correctamente');
+    }
 }

@@ -17,7 +17,7 @@
         @endif
         <h2>Empleados</h2>
         
-        <a href="{{ route('Empleado') }}" class="btn btn-primary mb-3">Nuevo Empleado</a>
+        <a href="{{ route('addEmpleado') }}" class="btn btn-primary mb-3">Nuevo Empleado</a>
         
         @if ($empleados->count() > 0)
             <table class="table mt-3">
@@ -36,6 +36,7 @@
                             <td>{{ $empleado->nombre }}</td>
                             <td>{{ $empleado->email }}</td>
                             <td>
+                                <a href="{{ route('updateEmpleado', ['id' => $empleado->id]) }}" class="btn btn-info">Editar</a>
                                 <a href="{{ route('infoEmpleado', ['id' => $empleado->id]) }}" class="btn btn-info">Info</a>
                             </td>
                         </tr>
