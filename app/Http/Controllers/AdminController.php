@@ -17,14 +17,10 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    //sin relación en el modelo
-    /*public function mostrarActividades(){
-        $actividades = actividades::select('actividades.*', 'estados.nombre as nombre_estado')
-            ->join('estados', 'actividades.id_estado', '=', 'estados.id')
-            ->get();
-    
-        return view('admin.mostrarActividades', ['actividades' => $actividades]);
-    }*/
+    /* 
+        Funciones para el registro y actulización de Actividades
+    */
+
 
     public function mostrarActividades(){
         $actividades = actividades::with('estados')->get();
@@ -117,5 +113,14 @@ class AdminController extends Controller
         }
     
         return redirect()->back()->with('error', 'El empleado ya está asignado a esta actividad');
+    }
+
+    /*
+        Funciones para el registro y actualización de Empleados
+    */
+
+    public function showEmpleados(){
+        $empleados = empleados::all();
+        return view('admin.empleados', ['empleados' => $empleados]);
     }
 }
