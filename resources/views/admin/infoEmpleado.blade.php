@@ -12,7 +12,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Nombre</th>
+                        <th>Especialidades</th>
                     </tr>
                 </thead>
                 <tbody>

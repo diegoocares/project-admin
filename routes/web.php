@@ -27,6 +27,10 @@ Route::prefix('administracion')->group(function () {
     //Empleados
 
     Route::get('/empleados', [AdminController::class, 'showEmpleados'])->name('showEmpleados');
+
+    Route::get('/addEmpleado', [AdminController::class, 'newEmpleado'])->name('addEmpleado');
+
+    Route::post('/saveEmpleado', [AdminController::class, 'addEmpleado'])->name('saveEmpleado');
 });
 
 

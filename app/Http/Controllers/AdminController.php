@@ -47,9 +47,6 @@ class AdminController extends Controller
 
         // Redirige al usuario a la página de editar la actividad recién creada
         return Redirect::route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
-
-        // Redirige al usuario a la página de mostrar actividades
-        //return Redirect::route('mostrarActividades')->with('success', 'Actividad creada exitosamente');
     }
 
 
@@ -122,5 +119,21 @@ class AdminController extends Controller
     public function showEmpleados(){
         $empleados = empleados::all();
         return view('admin.empleados', ['empleados' => $empleados]);
+    }
+
+    public function newEmpleado(){
+        return view('admin.addEmpleado');
+    }
+
+    public function addEmpleado(Request $request){
+        $empleado = new empleados([
+            'nombre' => $request->input('nombre'),
+            'email' => $request->input('email'),
+            'fecha_contratacion' => $request->input('fecha_contratacion'),
+        ]);
+
+        $empleado->save();
+
+        return Redirect::route('showEmpleados');
     }
 }

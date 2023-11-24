@@ -17,7 +17,7 @@
         @endif
         <h2>Empleados</h2>
         
-        <a href="{{ route('nuevaActividad') }}" class="btn btn-primary mb-3">Nueva Actividad</a>
+        <a href="{{ route('Empleado') }}" class="btn btn-primary mb-3">Nuevo Empleado</a>
         
         @if ($empleados->count() > 0)
             <table class="table mt-3">
