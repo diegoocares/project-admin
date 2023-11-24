@@ -15,8 +15,10 @@
                 {{ session('error') }}
             </div>
         @endif
-        <h5>Empleados</h5>
-
+        <h2>Empleados</h2>
+        
+        <a href="{{ route('nuevaActividad') }}" class="btn btn-primary mb-3">Nueva Actividad</a>
+        
         @if ($empleados->count() > 0)
             <table class="table mt-3">
                 <thead class="thead-dark">
@@ -40,10 +42,8 @@
                     @endforeach
                 </tbody>
             </table>
-            
         @else
-            <p>No hay empleados asignados a esta actividad.</p>
+            <p>No hay empleados.</p>
         @endif
     </div>
-
 @endsection

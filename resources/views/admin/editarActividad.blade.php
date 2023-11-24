@@ -96,4 +96,5 @@
         @endif
         
     </div>
+    <a href="{{ route('mostrarActividades') }}" class="btn btn-secondary mt-3">Volver</a>
 @endsection

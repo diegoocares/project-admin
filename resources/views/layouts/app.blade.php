@@ -13,6 +13,7 @@
             <h1 class="display-4">Panel de Administración</h1>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a class="navbar-brand" href="{{ route('mostrarActividades') }}">Actividades</a>
+                <a class="navbar-brand" href="{{ route('showEmpleados') }}">Empleados</a>
             </nav>
         </div>
     </header>
