@@ -13,7 +13,7 @@ class empleado_actividad extends Model
 
     // Definir la relación con la tabla actividades
     public function actividades(){
-        return $this->belongsTo(actividades::class, 'id_actividad');
+        return $this->belongsTo(Actividad::class, 'id_actividad');
     }
 
     // Definir la relación con la tabla actividades

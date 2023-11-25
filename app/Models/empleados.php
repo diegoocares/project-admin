@@ -18,7 +18,7 @@ class empleados extends Model
 
     // Definir la relación muchos a muchos con actividades
     public function actividades(){
-        return $this->belongsToMany(actividades::class, 'empleado_actividad', 'id_empleado', 'id_actividad');
+        return $this->belongsToMany(Actividad::class, 'empleado_actividad', 'id_empleado', 'id_actividad');
     }
 
     // Definir la relación muchos a muchos con roles

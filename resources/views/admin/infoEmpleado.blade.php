@@ -7,7 +7,7 @@
         <h2>Actividad: {{ $empleado->nombre }}</h2>
         <h5>Especialidades</h5>
 
-        @if ($empleado->especialidades)
+        @if ($empleado->especialidades->count() > 0)
             <table class="table mt-3">
                 <thead class="thead-dark">
                     <tr>

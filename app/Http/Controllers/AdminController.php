@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\actividades;
+use App\Models\Actividad;
 use App\Models\empleados;
 use App\Models\estados;
 use App\Models\empleado_actividad;
@@ -23,7 +23,7 @@ class AdminController extends Controller
 
 
     public function mostrarActividades(){
-        $actividades = actividades::with('estados')->get();
+        $actividades = Actividad::with('estados')->get();
     
         return view('admin.mostrarActividades', ['actividades' => $actividades]);
     }
@@ -35,7 +35,7 @@ class AdminController extends Controller
 
     public function addActividad(Request $request){
         // Crea una nueva instancia de la actividad
-        $actividad = new actividades([
+        $actividad = new Actividad([
             'nombre' => $request->input('nombre'),
             'id_estado' => $request->input('estado'),
             'fecha_realizacion' => $request->input('fecha_realizacion'),
@@ -52,7 +52,7 @@ class AdminController extends Controller
 
     public function editarActividad($id){
         // Lógica para obtener la actividad por su ID y pasarla al formulario de edición
-        $actividad = actividades::with(['empleados.roles' => function ($query) use ($id) {
+        $actividad = Actividad::with(['empleados.roles' => function ($query) use ($id) {
             $query->where('id_actividad', $id);
         }])->find($id);
 
