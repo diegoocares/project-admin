@@ -4,19 +4,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
 
+Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+
 Route::prefix('administracion')->group(function () {
 
     //Actividades
-
-    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     
-    Route::get('/actividades', [AdminController::class, 'mostrarActividades'])->name('mostrarActividades');
+    Route::get('/actividades', [AdminController::class, 'showActividades'])->name('mostrarActividades');
     
-    Route::get('/addActividad', [AdminController::class, 'nuevaActividad'])->name('nuevaActividad');
+    Route::get('/addActividad', [AdminController::class, 'newActividad'])->name('nuevaActividad');
 
     Route::post('/guardarActividad', [AdminController::class, 'addActividad'])->name('guardarActividad');
     
-    Route::get('/editarActividad/{id}', [AdminController::class, 'editarActividad'])->name('editarActividad');
+    Route::get('/editarActividad/{id}', [AdminController::class, 'updateActividad'])->name('editarActividad');
     
     Route::get('/infoEmpleado/{id}', [AdminController::class, 'infoEmpleadoById'])->name('infoEmpleado');
     

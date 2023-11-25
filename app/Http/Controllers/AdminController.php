@@ -22,13 +22,13 @@ class AdminController extends Controller
     */
 
 
-    public function mostrarActividades(){
+    public function showActividades(){
         $actividades = Actividad::with('estados')->get();
     
         return view('admin.mostrarActividades', ['actividades' => $actividades]);
     }
 
-    public function nuevaActividad(){
+    public function newActividad(){
         $estados = Estado::all();
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
@@ -50,7 +50,7 @@ class AdminController extends Controller
     }
 
 
-    public function editarActividad($id){
+    public function updateActividad($id){
         // Lógica para obtener la actividad por su ID y pasarla al formulario de edición
         $actividad = Actividad::with(['empleados.roles' => function ($query) use ($id) {
             $query->where('id_actividad', $id);
