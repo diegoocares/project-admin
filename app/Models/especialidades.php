@@ -13,6 +13,6 @@ class especialidades extends Model
 
     // Definir la relación muchos a muchos con empleados
     public function empleados(){
-        return $this->belongsToMany(Empleados::class, 'empleado_especialidad', 'id_especialidad', 'id_empleado');
+        return $this->belongsToMany(Empleado::class, 'empleado_especialidad', 'id_especialidad', 'id_empleado');
     }
 }

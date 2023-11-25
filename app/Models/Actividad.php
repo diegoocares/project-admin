@@ -23,6 +23,6 @@ class Actividad extends Model
 
     // Definir la relación con empleados a través de la tabla pivot
     public function empleados(){
-        return $this->belongsToMany(empleados::class, 'empleado_actividad', 'id_actividad', 'id_empleado');
+        return $this->belongsToMany(Empleado::class, 'empleado_actividad', 'id_actividad', 'id_empleado');
     }
 }

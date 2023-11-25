@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actividad;
-use App\Models\empleados;
+use App\Models\Empleado;
 use App\Models\estados;
 use App\Models\EmpleadoActividad;
 use App\Models\roles;
@@ -57,7 +57,7 @@ class AdminController extends Controller
         }])->find($id);
 
         // Obtén todos los empleados que no están asignados a esta actividad
-        $empleadosNoAsignados = empleados::whereDoesntHave('actividades', function ($query) use ($id) {
+        $empleadosNoAsignados = Empleado::whereDoesntHave('actividades', function ($query) use ($id) {
             $query->where('id_actividad', $id);
         })->get();
 
@@ -68,7 +68,7 @@ class AdminController extends Controller
     }
 
     public function infoEmpleadoById($id){
-        $empleado = empleados::with('especialidades')->find($id);
+        $empleado = Empleado::with('especialidades')->find($id);
         return view('admin.infoEmpleado', ['empleado' => $empleado]);
     }
 
@@ -117,7 +117,7 @@ class AdminController extends Controller
     */
 
     public function showEmpleados(){
-        $empleados = empleados::all();
+        $empleados = Empleado::all();
         return view('admin.empleados', ['empleados' => $empleados]);
     }
 
@@ -126,7 +126,7 @@ class AdminController extends Controller
     }
 
     public function addEmpleado(Request $request){
-        $empleado = new empleados([
+        $empleado = new Empleado([
             'nombre' => $request->input('nombre'),
             'email' => $request->input('email'),
             'fecha_contratacion' => $request->input('fecha_contratacion'),
@@ -138,12 +138,12 @@ class AdminController extends Controller
     }
 
     public function updateEmpleado($id){
-        $empleado = empleados::find($id);
+        $empleado = Empleado::find($id);
         return view('admin.updateEmpleado', ['empleado' => $empleado]);
     }
 
     public function saveUpdateEmpleado(Request $request, $id){
-        $empleado = empleados::find($id);
+        $empleado = Empleado::find($id);
 
         $empleado->update([
             'nombre' => $request->input('nombre'),
