@@ -6,6 +6,8 @@ use App\Models\Actividad;
 use App\Models\Empleado;
 use App\Models\Estado;
 use App\Models\EmpleadoActividad;
+use App\Models\EmpleadoEspecialidad;
+use App\Models\Especialidad;
 use App\Models\Rol;
 
 use Illuminate\Http\Request;
@@ -67,11 +69,6 @@ class AdminController extends Controller
         return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $empleadosNoAsignados, 'roles' => $roles]);
     }
 
-    public function infoEmpleadoById($id){
-        $empleado = Empleado::with('especialidades')->find($id);
-        return view('admin.infoEmpleado', ['empleado' => $empleado]);
-    }
-
     public function deleteEmpleadoActividad($id_empleado, $id_actividad){
         // Encuentra la relación empleado_actividad por los IDs proporcionados
         $relacion = EmpleadoActividad::where('id_empleado', $id_empleado)->where('id_actividad', $id_actividad);
@@ -125,6 +122,17 @@ class AdminController extends Controller
         return view('admin.addEmpleado');
     }
 
+    public function infoEmpleadoById($id){
+        $empleado = Empleado::with('especialidades')->find($id);
+
+        // Obtén las especialidad no asignadas al Empleado
+        $especialidadesNoAsignadas = Especialidad::whereDoesntHave('empleados', function ($query) use ($id) {
+            $query->where('id_empleado', $id);
+        })->get();
+
+        return view('admin.infoEmpleado', ['empleado' => $empleado, 'especialidadesNoAsignadas' => $especialidadesNoAsignadas]);
+    }
+
     public function addEmpleado(Request $request){
         $empleado = new Empleado([
             'nombre' => $request->input('nombre'),
@@ -152,5 +160,27 @@ class AdminController extends Controller
         ]);
 
         return Redirect::route('showEmpleados')->with('success', 'Empleado actualizado correctamente');
+    }
+
+    public function addEmpleadoEspecialidad(Request $request){
+        $id_empleado = $request->input('id_empleado');
+        $id_especialidad = $request->input('id_especialidad');
+    
+        // Verifica si ya existe una relación para evitar duplicados
+        $relacionExistente = EmpleadoEspecialidad::where('id_empleado', $id_empleado)
+            ->where('id_especialidad', $id_especialidad)
+            ->exists();
+    
+        if (!$relacionExistente) {
+            // Crea una nueva relación en la tabla pivot
+            EmpleadoEspecialidad::create([
+                'id_empleado' => $id_empleado,
+                'id_especialidad' => $id_especialidad,
+            ]);
+    
+            return redirect()->back()->with('success', 'Especialidad agregada exitosamente al empleado');
+        }
+    
+        return redirect()->back()->with('error', 'La especialidad ya se encuentra asignada al empleado');
     }
 }

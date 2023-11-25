@@ -18,8 +18,6 @@ Route::prefix('administracion')->group(function () {
     
     Route::get('/editarActividad/{id}', [AdminController::class, 'updateActividad'])->name('editarActividad');
     
-    Route::get('/infoEmpleado/{id}', [AdminController::class, 'infoEmpleadoById'])->name('infoEmpleado');
-    
     Route::get('/eliminarEmpleadoActividad/empe{id_empleado}acti{id_actividad}', [AdminController::class, 'deleteEmpleadoActividad'])->name('eliminarEmpleadoActividad');
     
     Route::post('/agregarEmpleadoActividad', [AdminController::class, 'addEmpleadoActividad'])->name('agregarEmpleadoActividad');
@@ -35,6 +33,10 @@ Route::prefix('administracion')->group(function () {
     Route::get('/updateEmpleado/{id}', [AdminController::class, 'updateEmpleado'])->name('updateEmpleado');
 
     Route::post('/saveUpdateEmpleado/{id}', [AdminController::class, 'saveUpdateEmpleado'])->name('saveUpdateEmpleado');
+
+    Route::get('/infoEmpleado/{id}', [AdminController::class, 'infoEmpleadoById'])->name('infoEmpleado');
+
+    Route::post('/agregarEmpleadoEspecialidad', [AdminController::class, 'addEmpleadoEspecialidad'])->name('agregarEmpleadoEspecialidad');
 });
 
 
