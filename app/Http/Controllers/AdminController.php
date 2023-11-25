@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Actividad;
 use App\Models\Empleado;
-use App\Models\estados;
+use App\Models\Estado;
 use App\Models\EmpleadoActividad;
-use App\Models\roles;
+use App\Models\Rol;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -29,7 +29,7 @@ class AdminController extends Controller
     }
 
     public function nuevaActividad(){
-        $estados = estados::all();
+        $estados = Estado::all();
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
 
@@ -62,7 +62,7 @@ class AdminController extends Controller
         })->get();
 
         // Obtener roles
-        $roles = roles::all();
+        $roles = Rol::all();
 
         return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $empleadosNoAsignados, 'roles' => $roles]);
     }

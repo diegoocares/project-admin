@@ -13,7 +13,7 @@ class Empleado extends Model
 
     // Definir la relación muchos a muchos con especialidades
     public function especialidades(){
-        return $this->belongsToMany(Especialidades::class, 'empleado_especialidad', 'id_empleado', 'id_especialidad');
+        return $this->belongsToMany(Especialidad::class, 'empleado_especialidad', 'id_empleado', 'id_especialidad');
     }
 
     // Definir la relación muchos a muchos con actividades
@@ -23,6 +23,6 @@ class Empleado extends Model
 
     // Definir la relación muchos a muchos con roles
     public function roles(){
-        return $this->belongsToMany(roles::class, 'empleado_actividad', 'id_empleado', 'id_rol');
+        return $this->belongsToMany(Rol::class, 'empleado_actividad', 'id_empleado', 'id_rol');
     }
 }

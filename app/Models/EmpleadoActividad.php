@@ -18,6 +18,6 @@ class EmpleadoActividad extends Model
 
     // Definir la relación con la tabla actividades
     public function roles(){
-        return $this->belongsTo(roles::class, 'id_rol');
+        return $this->belongsTo(Rol::class, 'id_rol');
     }
 }

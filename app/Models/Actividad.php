@@ -13,7 +13,7 @@ class Actividad extends Model
 
     // Definir la relación con la tabla estados
     public function estados(){
-        return $this->belongsTo(estados::class, 'id_estado');
+        return $this->belongsTo(Estado::class, 'id_estado');
     }
 
     // Definir la relación con la tabla pivot empleado_actividad
