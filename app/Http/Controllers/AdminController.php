@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Actividad;
 use App\Models\empleados;
 use App\Models\estados;
-use App\Models\empleado_actividad;
+use App\Models\EmpleadoActividad;
 use App\Models\roles;
 
 use Illuminate\Http\Request;
@@ -74,7 +74,7 @@ class AdminController extends Controller
 
     public function deleteEmpleadoActividad($id_empleado, $id_actividad){
         // Encuentra la relación empleado_actividad por los IDs proporcionados
-        $relacion = empleado_actividad::where('id_empleado', $id_empleado)->where('id_actividad', $id_actividad);
+        $relacion = EmpleadoActividad::where('id_empleado', $id_empleado)->where('id_actividad', $id_actividad);
         
         if($relacion){
             // Elimina la relación
@@ -93,13 +93,13 @@ class AdminController extends Controller
         $id_rol = $request->input('id_rol');
     
         // Verifica si ya existe una relación para evitar duplicados
-        $relacionExistente = empleado_actividad::where('id_empleado', $id_empleado)
+        $relacionExistente = EmpleadoActividad::where('id_empleado', $id_empleado)
             ->where('id_actividad', $id_actividad)
             ->exists();
     
         if (!$relacionExistente) {
             // Crea una nueva relación en la tabla pivot
-            empleado_actividad::create([
+            EmpleadoActividad::create([
                 'id_empleado' => $id_empleado,
                 'id_actividad' => $id_actividad,
                 'id_rol' => $id_rol,

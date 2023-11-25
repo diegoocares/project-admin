@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class empleado_actividad extends Model
+class EmpleadoActividad extends Model
 {
     protected $table = 'empleado_actividad';
     protected $fillable = ['id_empleado', 'id_actividad', 'id_rol', 'fecha_adicion'];

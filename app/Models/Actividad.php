@@ -18,7 +18,7 @@ class Actividad extends Model
 
     // Definir la relación con la tabla pivot empleado_actividad
     public function empleadoActividad(){
-        return $this->hasMany(empleado_actividad::class);
+        return $this->hasMany(EmpleadoActividad::class);
     }
 
     // Definir la relación con empleados a través de la tabla pivot
