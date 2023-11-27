@@ -56,7 +56,7 @@ class AdminController extends Controller
         // Lógica para obtener la actividad por su ID y pasarla al formulario de edición
         $actividad = Actividad::with(['empleados.roles' => function ($query) use ($id) {
             $query->where('id_actividad', $id);
-        }])->find($id);
+        }])->find($id); 
 
         // Obtén todos los empleados que no están asignados a esta actividad
         $empleadosNoAsignados = Empleado::whereDoesntHave('actividades', function ($query) use ($id) {
@@ -66,7 +66,24 @@ class AdminController extends Controller
         // Obtener roles
         $roles = Rol::all();
 
-        return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $empleadosNoAsignados, 'roles' => $roles]);
+        // Obtener estados
+        $estados = Estado::all();
+
+        return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $empleadosNoAsignados, 'roles' => $roles, 'estados' => $estados]);
+    }
+
+    public function updateEstadoActividad(Request $request){
+        $id_estado = $request->input('comboEstado');
+        $id_actividad = $request->input('id_actividad');
+        $estado_actual = Actividad::find($id_actividad)->id_estado;
+
+        if ($estado_actual == $id_estado) {
+            return redirect()->back()->with('error', 'La actividad ya se encuentra en este estado');
+        }
+
+        Actividad::where('id', $id_actividad)->update(['id_estado' => $id_estado]);
+
+        return redirect()->back()->with('success', 'El estado de la actividad ha sido actualizado correctamente');
     }
 
     public function deleteEmpleadoActividad($id_empleado, $id_actividad){

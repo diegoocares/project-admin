@@ -15,6 +15,19 @@
                 {{ session('error') }}
             </div>
         @endif
+        
+        <h5>Estado: {{ $actividad->estados->nombre }}</h5>
+        <form action="{{ route('editarEstadoActividad')}}" method="post">
+            @csrf
+            <select name="comboEstado">
+                @foreach ($estados as $estado)
+                    <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                @endforeach
+            </select>
+            <input type="hidden" name="id_actividad" value="{{ $actividad->id }}">
+            <button type="submit" class="btn btn-success">Actualizar estado</button>
+        </form>
+        
         <h5>Empleados asignados</h5>
 
         @if ($actividad->empleados->count() > 0)
@@ -30,6 +43,8 @@
                 </thead>
                 <tbody>
                     @foreach ($actividad->empleados as $empleado)
+                    <form action="{{ route('eliminarEmpleadoActividad', ['id_empleado' => $empleado->id, 'id_actividad' => $actividad->id]) }}" method="post">
+                    @csrf
                         <tr>
                             <td>{{ $empleado->id }}</td>
                             <td>{{ $empleado->nombre }}</td>
@@ -45,9 +60,10 @@
                             </td>
                             <td>
                                 <a href="{{ route('infoEmpleado', ['id' => $empleado->id]) }}" class="btn btn-info">Info</a>
-                                <a href="{{ route('eliminarEmpleadoActividad', ['id_empleado' => $empleado->id, 'id_actividad' => $actividad->id]) }}" class="btn btn-danger">Eliminar</a>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
                             </td>
                         </tr>
+                    </form>
                     @endforeach
                 </tbody>
             </table>
