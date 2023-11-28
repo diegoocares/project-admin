@@ -18,11 +18,11 @@ Route::prefix('administracion')->group(function () {
     
     Route::get('/editarActividad/{id}', [AdminController::class, 'updateActividad'])->name('editarActividad');
     
-    Route::post('/eliminarEmpleadoActividad/empe{id_empleado}acti{id_actividad}', [AdminController::class, 'deleteEmpleadoActividad'])->name('eliminarEmpleadoActividad');
+    Route::delete('/eliminarEmpleadoActividad/empe{id_empleado}acti{id_actividad}', [AdminController::class, 'deleteEmpleadoActividad'])->name('eliminarEmpleadoActividad');
     
     Route::post('/agregarEmpleadoActividad', [AdminController::class, 'addEmpleadoActividad'])->name('agregarEmpleadoActividad');
 
-    Route::post('/editarEstadoActividad', [AdminController::class, 'updateEstadoActividad'])->name('editarEstadoActividad');
+    Route::match(['post', 'patch'] ,'/editarEstadoActividad', [AdminController::class, 'updateEstadoActividad'])->name('editarEstadoActividad');
 
     //Empleados
 
@@ -34,11 +34,11 @@ Route::prefix('administracion')->group(function () {
 
     Route::get('/updateEmpleado/{id}', [AdminController::class, 'updateEmpleado'])->name('updateEmpleado');
 
-    Route::post('/saveUpdateEmpleado/{id}', [AdminController::class, 'saveUpdateEmpleado'])->name('saveUpdateEmpleado');
+    Route::match(['post', 'patch'] ,'/saveUpdateEmpleado/{id}', [AdminController::class, 'saveUpdateEmpleado'])->name('saveUpdateEmpleado');
 
     Route::get('/infoEmpleado/{id}', [AdminController::class, 'infoEmpleadoById'])->name('infoEmpleado');
 
-    Route::post('/agregarEmpleadoEspecialidad', [AdminController::class, 'addEmpleadoEspecialidad'])->name('agregarEmpleadoEspecialidad');
+    Route::match(['post', 'patch'] ,'/agregarEmpleadoEspecialidad', [AdminController::class, 'addEmpleadoEspecialidad'])->name('agregarEmpleadoEspecialidad');
 
     
 });

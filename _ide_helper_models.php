@@ -12,6 +12,185 @@
 
 namespace App\Models{
 /**
+ * App\Models\Actividad
+ *
+ * @property int $id
+ * @property string $nombre
+ * @property int $id_estado
+ * @property string $fecha_realizacion
+ * @property string $fecha_finalizacion
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EmpleadoActividad> $empleadoActividad
+ * @property-read int|null $empleado_actividad_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Empleado> $empleados
+ * @property-read int|null $empleados_count
+ * @property-read \App\Models\Estado $estados
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereFechaFinalizacion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereFechaRealizacion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereIdEstado($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereNombre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Actividad whereUpdatedAt($value)
+ */
+	class Actividad extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Empleado
+ *
+ * @property int $id
+ * @property string $nombre
+ * @property string|null $email
+ * @property string $fecha_contratacion
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Actividad> $actividades
+ * @property-read int|null $actividades_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Especialidad> $especialidades
+ * @property-read int|null $especialidades_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Rol> $roles
+ * @property-read int|null $roles_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado whereFechaContratacion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado whereNombre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Empleado whereUpdatedAt($value)
+ */
+	class Empleado extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\EmpleadoActividad
+ *
+ * @property int $id
+ * @property int $id_empleado
+ * @property int $id_actividad
+ * @property int $id_rol
+ * @property string $fecha_adicion
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Actividad $actividades
+ * @property-read \App\Models\Rol $roles
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereFechaAdicion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereIdActividad($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereIdEmpleado($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereIdRol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoActividad whereUpdatedAt($value)
+ */
+	class EmpleadoActividad extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\EmpleadoEspecialidad
+ *
+ * @property int $id
+ * @property int $id_empleado
+ * @property int $id_especialidad
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad whereIdEmpleado($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad whereIdEspecialidad($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmpleadoEspecialidad whereUpdatedAt($value)
+ */
+	class EmpleadoEspecialidad extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Especialidad
+ *
+ * @property int $id
+ * @property string $nombre
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Empleado> $empleados
+ * @property-read int|null $empleados_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad whereNombre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Especialidad whereUpdatedAt($value)
+ */
+	class Especialidad extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Estado
+ *
+ * @property int $id
+ * @property string $nombre
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado whereNombre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Estado whereUpdatedAt($value)
+ */
+	class Estado extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Rol
+ *
+ * @property int $id
+ * @property string $nombre
+ * @property string $descripcion
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol whereDescripcion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol whereNombre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rol whereUpdatedAt($value)
+ */
+	class Rol extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Status
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Status newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Status newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Status query()
+ */
+	class Status extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property mixed $password
@@ -25,173 +204,5 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  */
 	class User extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\actividades
- *
- * @property int $id
- * @property string $nombre
- * @property int $id_estado
- * @property string $fecha_realizacion
- * @property string $fecha_finalizacion
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\empleado_actividad> $empleadoActividad
- * @property-read int|null $empleado_actividad_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\empleados> $empleados
- * @property-read int|null $empleados_count
- * @property-read \App\Models\estados $estados
- * @method static \Illuminate\Database\Eloquent\Builder|actividades newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|actividades newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|actividades query()
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereFechaFinalizacion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereFechaRealizacion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereIdEstado($value)
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereNombre($value)
- * @method static \Illuminate\Database\Eloquent\Builder|actividades whereUpdatedAt($value)
- */
-	class actividades extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\empleado_actividad
- *
- * @property int $id
- * @property int $id_empleado
- * @property int $id_actividad
- * @property int $id_rol
- * @property string $fecha_adicion
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\actividades $actividades
- * @property-read \App\Models\roles $roles
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad query()
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereFechaAdicion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereIdActividad($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereIdEmpleado($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereIdRol($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_actividad whereUpdatedAt($value)
- */
-	class empleado_actividad extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\empleado_especialidad
- *
- * @property int $id
- * @property int $id_empleado
- * @property int $id_especialidad
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad query()
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad whereIdEmpleado($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad whereIdEspecialidad($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleado_especialidad whereUpdatedAt($value)
- */
-	class empleado_especialidad extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\empleados
- *
- * @property int $id
- * @property string $nombre
- * @property string|null $email
- * @property string $fecha_contratacion
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\actividades> $actividades
- * @property-read int|null $actividades_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\especialidades> $especialidades
- * @property-read int|null $especialidades_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\roles> $roles
- * @property-read int|null $roles_count
- * @method static \Illuminate\Database\Eloquent\Builder|empleados newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|empleados newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|empleados query()
- * @method static \Illuminate\Database\Eloquent\Builder|empleados whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleados whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleados whereFechaContratacion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleados whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleados whereNombre($value)
- * @method static \Illuminate\Database\Eloquent\Builder|empleados whereUpdatedAt($value)
- */
-	class empleados extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\especialidades
- *
- * @property int $id
- * @property string $nombre
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\empleados> $empleados
- * @property-read int|null $empleados_count
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades query()
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades whereNombre($value)
- * @method static \Illuminate\Database\Eloquent\Builder|especialidades whereUpdatedAt($value)
- */
-	class especialidades extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\estados
- *
- * @property int $id
- * @property string $nombre
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|estados newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|estados newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|estados query()
- * @method static \Illuminate\Database\Eloquent\Builder|estados whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|estados whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|estados whereNombre($value)
- * @method static \Illuminate\Database\Eloquent\Builder|estados whereUpdatedAt($value)
- */
-	class estados extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\roles
- *
- * @property int $id
- * @property string $nombre
- * @property string $descripcion
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|roles newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|roles newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|roles query()
- * @method static \Illuminate\Database\Eloquent\Builder|roles whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|roles whereDescripcion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|roles whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|roles whereNombre($value)
- * @method static \Illuminate\Database\Eloquent\Builder|roles whereUpdatedAt($value)
- */
-	class roles extends \Eloquent {}
 }
 

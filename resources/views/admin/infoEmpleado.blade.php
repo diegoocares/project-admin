@@ -58,6 +58,7 @@
                             <td>
                                 <form action="{{ route('agregarEmpleadoEspecialidad') }}" method="post">
                                     @csrf
+                                    @method('PATCH')
                                     <input type="hidden" name="id_empleado" value="{{ $empleado->id }}">
                                     <input type="hidden" name="id_especialidad" value="{{ $especialidad->id }}">
                                     <button type="submit" class="btn btn-success">Agregar</button>

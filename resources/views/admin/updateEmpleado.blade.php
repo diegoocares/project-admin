@@ -8,6 +8,7 @@
 
         <form action="{{ route('saveUpdateEmpleado', ['id' => $empleado->id]) }}" method="POST">
             @csrf
+            @method('PATCH')
             <div class="form-group">
                 <label for="nombre">ID del Empleado</label>
                 <input type="text" class="form-control" id="id" name="id" value="{{$empleado->id}}" required disabled>

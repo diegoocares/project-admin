@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Actividad;
-use App\Models\Empleado;
+use App\Models\Rol;
 use App\Models\Estado;
+use App\Models\Empleado;
+use App\Models\Actividad;
+use App\Models\Especialidad;
 use App\Models\EmpleadoActividad;
 use App\Models\EmpleadoEspecialidad;
-use App\Models\Especialidad;
-use App\Models\Rol;
-
-use Illuminate\Http\Request;
+use App\Http\Requests\EmpleadoRequest;
+use App\Http\Requests\ActividadRequest;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\EmpleadoActividadRequest;
+use App\Http\Requests\EmpleadoEspecialidadRequest;
 
 class AdminController extends Controller
 {
@@ -23,10 +26,26 @@ class AdminController extends Controller
         Funciones para el registro y actulización de Actividades
     */
 
-
+    /**
+     * 
+     */
     public function showActividades(){
-        $actividades = Actividad::with('estados')->get();
-    
+
+        $actividades = Actividad::with('estados')
+            ->get();
+
+        /**
+         * $actividades = Actividad::with('estados')
+         *   ->select('nombre')
+         *   ->get();
+         * 
+         * función util para revisar la información que llega o se manda en las variables
+         * en este caso veerá lo que llega por la variable $actividades
+         * dd($actividades);
+         * 
+         */
+        
+
         return view('admin.mostrarActividades', ['actividades' => $actividades]);
     }
 
@@ -35,7 +54,7 @@ class AdminController extends Controller
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
 
-    public function addActividad(Request $request){
+    public function addActividad(ActividadRequest $request){
         // Crea una nueva instancia de la actividad
         $actividad = new Actividad([
             'nombre' => $request->input('nombre'),
@@ -72,7 +91,7 @@ class AdminController extends Controller
         return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $empleadosNoAsignados, 'roles' => $roles, 'estados' => $estados]);
     }
 
-    public function updateEstadoActividad(Request $request){
+    public function updateEstadoActividad(ActividadRequest $request){
         $id_estado = $request->input('comboEstado');
         $id_actividad = $request->input('id_actividad');
         $estado_actual = Actividad::find($id_actividad)->id_estado;
@@ -101,7 +120,7 @@ class AdminController extends Controller
         }
     }
 
-    public function addEmpleadoActividad(Request $request){
+    public function addEmpleadoActividad(EmpleadoActividadRequest $request){
         $id_empleado = $request->input('id_empleado');
         $id_actividad = $request->input('id_actividad');
         $id_rol = $request->input('id_rol');
@@ -150,7 +169,7 @@ class AdminController extends Controller
         return view('admin.infoEmpleado', ['empleado' => $empleado, 'especialidadesNoAsignadas' => $especialidadesNoAsignadas]);
     }
 
-    public function addEmpleado(Request $request){
+    public function addEmpleado(EmpleadoRequest $request){
         $empleado = new Empleado([
             'nombre' => $request->input('nombre'),
             'email' => $request->input('email'),
@@ -167,7 +186,7 @@ class AdminController extends Controller
         return view('admin.updateEmpleado', ['empleado' => $empleado]);
     }
 
-    public function saveUpdateEmpleado(Request $request, $id){
+    public function saveUpdateEmpleado(EmpleadoRequest $request, $id){
         $empleado = Empleado::find($id);
 
         $empleado->update([
@@ -179,25 +198,22 @@ class AdminController extends Controller
         return Redirect::route('showEmpleados')->with('success', 'Empleado actualizado correctamente');
     }
 
-    public function addEmpleadoEspecialidad(Request $request){
+    public function addEmpleadoEspecialidad(EmpleadoEspecialidadRequest $request){
         $id_empleado = $request->input('id_empleado');
         $id_especialidad = $request->input('id_especialidad');
-    
-        // Verifica si ya existe una relación para evitar duplicados
-        $relacionExistente = EmpleadoEspecialidad::where('id_empleado', $id_empleado)
-            ->where('id_especialidad', $id_especialidad)
-            ->exists();
-    
-        if (!$relacionExistente) {
-            // Crea una nueva relación en la tabla pivot
-            EmpleadoEspecialidad::create([
+
+        try{
+            // Intenta encontrar la relación existente o crear una nueva
+            EmpleadoEspecialidad::firstOrCreate([
                 'id_empleado' => $id_empleado,
-                'id_especialidad' => $id_especialidad,
+                'id_especialidad' => $id_especialidad
             ]);
     
             return redirect()->back()->with('success', 'Especialidad agregada exitosamente al empleado');
-        }
     
-        return redirect()->back()->with('error', 'La especialidad ya se encuentra asignada al empleado');
+        } catch (QueryException $e){
+            return redirect()->back()->with('error', 'La especialidad ya se encuentra asignada al empleado');
+        }
+        
     }
 }

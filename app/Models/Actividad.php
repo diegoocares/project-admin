@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Actividad extends Model
 {
@@ -12,7 +13,8 @@ class Actividad extends Model
     use HasFactory;
 
     // Definir la relación con la tabla estados
-    public function estados(){
+    public function estados(): BelongsTo
+    {
         return $this->belongsTo(Estado::class, 'id_estado');
     }
 

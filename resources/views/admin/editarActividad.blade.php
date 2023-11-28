@@ -19,6 +19,7 @@
         <h5>Estado: {{ $actividad->estados->nombre }}</h5>
         <form action="{{ route('editarEstadoActividad')}}" method="post">
             @csrf
+            @method('PATCH')
             <select name="comboEstado">
                 @foreach ($estados as $estado)
                     <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
@@ -45,6 +46,7 @@
                     @foreach ($actividad->empleados as $empleado)
                     <form action="{{ route('eliminarEmpleadoActividad', ['id_empleado' => $empleado->id, 'id_actividad' => $actividad->id]) }}" method="post">
                     @csrf
+                    @method('DELETE')
                         <tr>
                             <td>{{ $empleado->id }}</td>
                             <td>{{ $empleado->nombre }}</td>
