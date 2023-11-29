@@ -8,10 +8,8 @@ use App\Models\Empleado;
 use App\Models\Actividad;
 use App\Models\Especialidad;
 use App\Models\EmpleadoActividad;
-use App\Models\EmpleadoEspecialidad;
 use App\Http\Requests\EmpleadoRequest;
 use App\Http\Requests\ActividadRequest;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\EmpleadoActividadRequest;
 use App\Http\Requests\EmpleadoEspecialidadRequest;
@@ -41,6 +39,7 @@ class AdminController extends Controller
          * 
          * función util para revisar la información que llega o se manda en las variables
          * en este caso veerá lo que llega por la variable $actividades
+         * 
          * dd($actividades);
          * 
          */
@@ -55,19 +54,8 @@ class AdminController extends Controller
     }
 
     public function addActividad(ActividadRequest $request){
-        // Crea una nueva instancia de la actividad
-        $actividad = new Actividad([
-            'nombre' => $request->input('nombre'),
-            'id_estado' => $request->input('estado'),
-            'fecha_realizacion' => $request->input('fecha_realizacion'),
-            'fecha_finalizacion' => $request->input('fecha_finalizacion'),
-        ]);
-
-        // Guarda la actividad en la base de datos
-        $actividad->save();
-
-        // Redirige al usuario a la página de editar la actividad recién creada
-        return Redirect::route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
+        $actividad = Actividad::create($request->validated());
+        return redirect()->route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
     }
 
 
@@ -92,57 +80,43 @@ class AdminController extends Controller
     }
 
     public function updateEstadoActividad(ActividadRequest $request){
-        $id_estado = $request->input('comboEstado');
-        $id_actividad = $request->input('id_actividad');
-        $estado_actual = Actividad::find($id_actividad)->id_estado;
+        $actividad = Actividad::find($request->input('id_actividad'));
 
-        if ($estado_actual == $id_estado) {
+        if (!$actividad){
+            return redirect()->back()->with('error', 'Actividad no encontrada');
+        }
+
+        $nuevoEstado = $request->input('comboEstado');
+        $estadoActual = $actividad->id_estado;
+
+        if ($nuevoEstado == $estadoActual) {
             return redirect()->back()->with('error', 'La actividad ya se encuentra en este estado');
         }
 
-        Actividad::where('id', $id_actividad)->update(['id_estado' => $id_estado]);
-
+        $actividad->update(['id_estado' => $request->input('comboEstado')]);
         return redirect()->back()->with('success', 'El estado de la actividad ha sido actualizado correctamente');
     }
 
     public function deleteEmpleadoActividad($id_empleado, $id_actividad){
-        // Encuentra la relación empleado_actividad por los IDs proporcionados
-        $relacion = EmpleadoActividad::where('id_empleado', $id_empleado)->where('id_actividad', $id_actividad);
-        
-        if($relacion){
-            // Elimina la relación
-            $relacion->delete();
-            
-            return Redirect::back()->with('success', 'Empleado eliminado de la actividad exitosamente');
-        } else {
-            // No se encontró la relación
-            return Redirect::back()->with('error', 'No se pudo encontrar la relación empleado-actividad');
-        }
-    }
+        $empleado = Empleado::find($id_empleado);
 
-    public function addEmpleadoActividad(EmpleadoActividadRequest $request){
-        $id_empleado = $request->input('id_empleado');
-        $id_actividad = $request->input('id_actividad');
-        $id_rol = $request->input('id_rol');
-    
-        // Verifica si ya existe una relación para evitar duplicados
-        $relacionExistente = EmpleadoActividad::where('id_empleado', $id_empleado)
-            ->where('id_actividad', $id_actividad)
-            ->exists();
-    
-        if (!$relacionExistente) {
-            // Crea una nueva relación en la tabla pivot
-            EmpleadoActividad::create([
-                'id_empleado' => $id_empleado,
-                'id_actividad' => $id_actividad,
-                'id_rol' => $id_rol,
-                'fecha_adicion' => now(), // Puedes ajustar esto según tus necesidades
-            ]);
-    
-            return redirect()->back()->with('success', 'Empleado agregado exitosamente a la actividad');
+        if($empleado){
+            $empleado->actividades()->detach($id_actividad);
+            return Redirect::back()->with('success', 'Empleado eliminado de la actividad exitosamente');
         }
-    
-        return redirect()->back()->with('error', 'El empleado ya está asignado a esta actividad');
+
+        return Redirect::back()->with('error', 'No se pudo encontrar al empleado');
+    }
+    public function addEmpleadoActividad(EmpleadoActividadRequest $request){
+
+        $empleado = Empleado::find($request->input('id_empleado'));
+
+        if (!$empleado){
+            return redirect()->back()->with('error', 'El empleado ya está asignado a esta actividad');
+        }
+
+        $empleado->actividades()->attach($request->input('id_actividad'), ['id_rol' => $request->input('id_rol'), 'fecha_adicion' => now()]);
+        return redirect()->back()->with('success', 'Empleado agregado exitosamente a la actividad');
     }
 
     /*
@@ -170,13 +144,7 @@ class AdminController extends Controller
     }
 
     public function addEmpleado(EmpleadoRequest $request){
-        $empleado = new Empleado([
-            'nombre' => $request->input('nombre'),
-            'email' => $request->input('email'),
-            'fecha_contratacion' => $request->input('fecha_contratacion'),
-        ]);
-
-        $empleado->save();
+        Empleado::create($request->validated());
 
         return Redirect::route('showEmpleados');
     }
@@ -199,21 +167,15 @@ class AdminController extends Controller
     }
 
     public function addEmpleadoEspecialidad(EmpleadoEspecialidadRequest $request){
-        $id_empleado = $request->input('id_empleado');
-        $id_especialidad = $request->input('id_especialidad');
 
-        try{
-            // Intenta encontrar la relación existente o crear una nueva
-            EmpleadoEspecialidad::firstOrCreate([
-                'id_empleado' => $id_empleado,
-                'id_especialidad' => $id_especialidad
-            ]);
-    
-            return redirect()->back()->with('success', 'Especialidad agregada exitosamente al empleado');
-    
-        } catch (QueryException $e){
-            return redirect()->back()->with('error', 'La especialidad ya se encuentra asignada al empleado');
+        $empleado = Empleado::find($request->input('id_empleado'));
+
+        if (!$empleado){
+            return redirect()->back()->with('error', 'Empleado no encontrado');
         }
-        
+
+        $empleado->especialidades()->sync([$request->input('id_especialidad')], false);
+
+        return redirect()->back()->with('success', 'Especialidad agregada exitosamente al empleado');
     }
 }

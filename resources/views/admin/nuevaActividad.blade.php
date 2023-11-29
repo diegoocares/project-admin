@@ -15,7 +15,7 @@
 
             <div class="form-group">
                 <label for="estado">Estado</label>
-                <select class="form-control" id="estado" name="estado" required>
+                <select class="form-control" id="id_estado" name="id_estado" required>
                     @foreach ($estados as $estado)
                         <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
                     @endforeach

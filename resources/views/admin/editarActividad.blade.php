@@ -94,7 +94,7 @@
                             <td>
                                 <form action="{{ route('agregarEmpleadoActividad') }}" method="post">
                                     @csrf
-                                    <select name="id_rol">
+                                    <select id="id_rol" name="id_rol">
                                         @foreach ($roles as $rol)
                                             <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
                                         @endforeach
