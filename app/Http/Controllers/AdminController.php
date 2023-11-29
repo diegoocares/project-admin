@@ -8,6 +8,7 @@ use App\Models\Empleado;
 use App\Models\Actividad;
 use App\Models\Especialidad;
 use App\Models\EmpleadoActividad;
+use App\Services\ActividadService;
 use App\Http\Requests\EmpleadoRequest;
 use App\Http\Requests\ActividadRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -16,6 +17,14 @@ use App\Http\Requests\EmpleadoEspecialidadRequest;
 
 class AdminController extends Controller
 {
+
+    protected $actividadService;
+
+    public function __construct(ActividadService $actividadService)
+    {
+        $this->actividadService = $actividadService;
+    }
+
     public function index(){
         return view('admin.dashboard');
     }
@@ -23,10 +32,6 @@ class AdminController extends Controller
     /* 
         Funciones para el registro y actulización de Actividades
     */
-
-    /**
-     * 
-     */
     public function showActividades(){
 
         $actividades = Actividad::with('estados')
@@ -52,9 +57,15 @@ class AdminController extends Controller
         $estados = Estado::all();
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
-
+    /*
     public function addActividad(ActividadRequest $request){
         $actividad = Actividad::create($request->validated());
+        return redirect()->route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
+    }
+    */
+
+    public function addActividad(ActividadRequest $request){
+        $actividad = $this->actividadService->create($request);
         return redirect()->route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
     }
 
