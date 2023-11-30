@@ -9,20 +9,29 @@ use App\Models\Actividad;
 use App\Models\Especialidad;
 use App\Models\EmpleadoActividad;
 use App\Services\ActividadService;
+use App\Services\EmpleadoService;
 use App\Http\Requests\EmpleadoRequest;
 use App\Http\Requests\ActividadRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\EmpleadoActividadRequest;
 use App\Http\Requests\EmpleadoEspecialidadRequest;
+use App\Services\EstadoService;
+use App\Services\RolService;
 
 class AdminController extends Controller
 {
 
     protected $actividadService;
+    protected $rolService;
+    protected $estadoService;
+    protected $empleadoService;
 
-    public function __construct(ActividadService $actividadService)
+    public function __construct(ActividadService $actividadService, RolService $rolService, EstadoService $estadoService, EmpleadoService $empleadoService)
     {
         $this->actividadService = $actividadService;
+        $this->rolService = $rolService;
+        $this->estadoService = $estadoService;
+        $this->empleadoService = $empleadoService;
     }
 
     public function index(){
@@ -57,67 +66,51 @@ class AdminController extends Controller
         $estados = Estado::all();
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
-    /*
-    public function addActividad(ActividadRequest $request){
-        $actividad = Actividad::create($request->validated());
-        return redirect()->route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
-    }
-    */
 
     public function addActividad(ActividadRequest $request){
         $actividad = $this->actividadService->create($request);
         return redirect()->route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
     }
 
+    public function editActividad($id){
+        $actividad = $this->actividadService->getEmpleadosActividadById($id);
 
-    public function updateActividad($id){
-        // Lógica para obtener la actividad por su ID y pasarla al formulario de edición
-        $actividad = Actividad::with(['empleados.roles' => function ($query) use ($id) {
-            $query->where('id_actividad', $id);
-        }])->find($id); 
+        $unassignedEmpleados = $this->actividadService->getUnassignedEmpleados($id);
 
-        // Obtén todos los empleados que no están asignados a esta actividad
-        $empleadosNoAsignados = Empleado::whereDoesntHave('actividades', function ($query) use ($id) {
-            $query->where('id_actividad', $id);
-        })->get();
+        $roles = $this->rolService->getAll();
 
-        // Obtener roles
-        $roles = Rol::all();
+        $estados = $this->estadoService->getAll();
 
-        // Obtener estados
-        $estados = Estado::all();
-
-        return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $empleadosNoAsignados, 'roles' => $roles, 'estados' => $estados]);
+        return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $unassignedEmpleados, 'roles' => $roles, 'estados' => $estados]);
     }
 
     public function updateEstadoActividad(ActividadRequest $request){
-        $actividad = Actividad::find($request->input('id_actividad'));
+        $actividad = $this->actividadService->findId($request->input('id_actividad'));
 
         if (!$actividad){
             return redirect()->back()->with('error', 'Actividad no encontrada');
         }
 
         $nuevoEstado = $request->input('comboEstado');
-        $estadoActual = $actividad->id_estado;
 
-        if ($nuevoEstado == $estadoActual) {
-            return redirect()->back()->with('error', 'La actividad ya se encuentra en este estado');
+        if ($this->actividadService->updateActividadEstado($actividad, $nuevoEstado)) {
+            return redirect()->back()->with('success', 'El estado de la actividad ha sido actualizado correctamente');
         }
 
-        $actividad->update(['id_estado' => $request->input('comboEstado')]);
-        return redirect()->back()->with('success', 'El estado de la actividad ha sido actualizado correctamente');
+        return redirect()->back()->with('error', 'La actividad ya se encuentra en este estado');
     }
 
     public function deleteEmpleadoActividad($id_empleado, $id_actividad){
-        $empleado = Empleado::find($id_empleado);
+        $empleado = $this->empleadoService->findId($id_empleado);
 
         if($empleado){
-            $empleado->actividades()->detach($id_actividad);
+            $this->empleadoService->deleteEmpleadoActividad($empleado, $id_actividad);
             return Redirect::back()->with('success', 'Empleado eliminado de la actividad exitosamente');
         }
 
         return Redirect::back()->with('error', 'No se pudo encontrar al empleado');
     }
+
     public function addEmpleadoActividad(EmpleadoActividadRequest $request){
 
         $empleado = Empleado::find($request->input('id_empleado'));
@@ -126,7 +119,8 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'El empleado ya está asignado a esta actividad');
         }
 
-        $empleado->actividades()->attach($request->input('id_actividad'), ['id_rol' => $request->input('id_rol'), 'fecha_adicion' => now()]);
+        $this->empleadoService->addEmpleadoActividad($empleado, $request);
+        
         return redirect()->back()->with('success', 'Empleado agregado exitosamente a la actividad');
     }
 

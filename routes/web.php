@@ -16,7 +16,7 @@ Route::prefix('administracion')->group(function () {
 
     Route::post('/guardarActividad', [AdminController::class, 'addActividad'])->name('guardarActividad');
     
-    Route::get('/editarActividad/{id}', [AdminController::class, 'updateActividad'])->name('editarActividad');
+    Route::get('/editarActividad/{id}', [AdminController::class, 'editActividad'])->name('editarActividad');
     
     Route::delete('/eliminarEmpleadoActividad/empe{id_empleado}acti{id_actividad}', [AdminController::class, 'deleteEmpleadoActividad'])->name('eliminarEmpleadoActividad');
     
