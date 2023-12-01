@@ -1,9 +1,9 @@
 <?php
 namespace App\Services;
 
+use App\Models\Empleado;
 use App\Models\Actividad;
 use App\Http\Requests\ActividadRequest;
-use App\Models\Empleado;
 
 class ActividadService
 {

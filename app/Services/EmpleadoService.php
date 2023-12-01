@@ -1,11 +1,11 @@
 <?php
 namespace App\Services;
 
-use App\Http\Requests\EmpleadoActividadRequest;
-use App\Http\Requests\EmpleadoRequest;
-use App\Http\Requests\EmpleadoEspecialidadRequest;
-use App\Models\Especialidad;
 use App\Models\Empleado;
+use App\Models\Especialidad;
+use App\Http\Requests\EmpleadoRequest;
+use App\Http\Requests\EmpleadoActividadRequest;
+use App\Http\Requests\EmpleadoEspecialidadRequest;
 
 class EmpleadoService
 {

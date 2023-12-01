@@ -2,36 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rol;
-use App\Models\Estado;
-use App\Models\Empleado;
-use App\Models\Actividad;
-use App\Models\Especialidad;
-use App\Models\EmpleadoActividad;
-use App\Services\ActividadService;
+use App\Services\RolService;
+use App\Services\EstadoService;
 use App\Services\EmpleadoService;
+use App\Services\ActividadService;
 use App\Http\Requests\EmpleadoRequest;
 use App\Http\Requests\ActividadRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\EmpleadoActividadRequest;
 use App\Http\Requests\EmpleadoEspecialidadRequest;
-use App\Services\EstadoService;
-use App\Services\RolService;
 
 class AdminController extends Controller
 {
 
-    protected $actividadService;
     protected $rolService;
     protected $estadoService;
     protected $empleadoService;
+    protected $actividadService;
 
     public function __construct(ActividadService $actividadService, RolService $rolService, EstadoService $estadoService, EmpleadoService $empleadoService)
     {
-        $this->actividadService = $actividadService;
         $this->rolService = $rolService;
         $this->estadoService = $estadoService;
         $this->empleadoService = $empleadoService;
+        $this->actividadService = $actividadService;
     }
 
     public function index()
@@ -45,8 +39,7 @@ class AdminController extends Controller
     public function showActividades()
     {
 
-        $actividades = Actividad::with('estados')
-            ->get();
+        $actividades = $this->actividadService->getAll();
 
         /**
          * $actividades = Actividad::with('estados')
@@ -66,7 +59,7 @@ class AdminController extends Controller
 
     public function newActividad()
     {
-        $estados = Estado::all();
+        $estados = $this->estadoService->getAll();
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
 
@@ -120,8 +113,7 @@ class AdminController extends Controller
 
     public function addEmpleadoActividad(EmpleadoActividadRequest $request)
     {
-
-        $empleado = Empleado::find($request->input('id_empleado'));
+        $empleado = $this->empleadoService->findId($request->input('id_empleado'));
 
         if (!$empleado){
             return redirect()->back()->with('error', 'El empleado ya está asignado a esta actividad');
@@ -149,7 +141,7 @@ class AdminController extends Controller
 
     public function infoEmpleadoById($id)
     {
-        $empleado = Empleado::with('especialidades')->find($id);
+        $empleado = $this->empleadoService->findId($id);
 
         // Obtén las especialidad no asignadas al Empleado
         $especialidadesNoAsignadas = $this->empleadoService->getEspecialidadesNoAsignadas($id);
