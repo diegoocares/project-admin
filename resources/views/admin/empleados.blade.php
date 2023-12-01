@@ -36,7 +36,7 @@
                             <td>{{ $empleado->nombre }}</td>
                             <td>{{ $empleado->email }}</td>
                             <td>
-                                <a href="{{ route('updateEmpleado', ['id' => $empleado->id]) }}" class="btn btn-info">Editar</a>
+                                <a href="{{ route('editEmpleado', ['id' => $empleado->id]) }}" class="btn btn-info">Editar</a>
                                 <a href="{{ route('infoEmpleado', ['id' => $empleado->id]) }}" class="btn btn-info">Info</a>
                             </td>
                         </tr>

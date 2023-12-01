@@ -32,9 +32,9 @@ Route::prefix('administracion')->group(function () {
 
     Route::post('/saveEmpleado', [AdminController::class, 'addEmpleado'])->name('saveEmpleado');
 
-    Route::get('/updateEmpleado/{id}', [AdminController::class, 'updateEmpleado'])->name('updateEmpleado');
+    Route::get('/editEmpleado/{id}', [AdminController::class, 'editEmpleado'])->name('editEmpleado');
 
-    Route::match(['post', 'patch'] ,'/saveUpdateEmpleado/{id}', [AdminController::class, 'saveUpdateEmpleado'])->name('saveUpdateEmpleado');
+    Route::match(['post', 'patch'] ,'/UpdateEmpleado/{id}', [AdminController::class, 'UpdateEmpleado'])->name('UpdateEmpleado');
 
     Route::get('/infoEmpleado/{id}', [AdminController::class, 'infoEmpleadoById'])->name('infoEmpleado');
 

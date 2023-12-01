@@ -34,14 +34,16 @@ class AdminController extends Controller
         $this->empleadoService = $empleadoService;
     }
 
-    public function index(){
+    public function index()
+    {
         return view('admin.dashboard');
     }
 
     /* 
         Funciones para el registro y actulización de Actividades
     */
-    public function showActividades(){
+    public function showActividades()
+    {
 
         $actividades = Actividad::with('estados')
             ->get();
@@ -62,17 +64,20 @@ class AdminController extends Controller
         return view('admin.mostrarActividades', ['actividades' => $actividades]);
     }
 
-    public function newActividad(){
+    public function newActividad()
+    {
         $estados = Estado::all();
         return view('admin.nuevaActividad', ['estados' => $estados]);
     }
 
-    public function addActividad(ActividadRequest $request){
+    public function addActividad(ActividadRequest $request)
+    {
         $actividad = $this->actividadService->create($request);
         return redirect()->route('editarActividad', ['id' => $actividad->id])->with('success', 'Actividad creada exitosamente');
     }
 
-    public function editActividad($id){
+    public function editActividad($id)
+    {
         $actividad = $this->actividadService->getEmpleadosActividadById($id);
 
         $unassignedEmpleados = $this->actividadService->getUnassignedEmpleados($id);
@@ -84,7 +89,8 @@ class AdminController extends Controller
         return view('admin.editarActividad', ['actividad' => $actividad, 'empleadosNoAsignados' => $unassignedEmpleados, 'roles' => $roles, 'estados' => $estados]);
     }
 
-    public function updateEstadoActividad(ActividadRequest $request){
+    public function updateEstadoActividad(ActividadRequest $request)
+    {
         $actividad = $this->actividadService->findId($request->input('id_actividad'));
 
         if (!$actividad){
@@ -100,7 +106,8 @@ class AdminController extends Controller
         return redirect()->back()->with('error', 'La actividad ya se encuentra en este estado');
     }
 
-    public function deleteEmpleadoActividad($id_empleado, $id_actividad){
+    public function deleteEmpleadoActividad($id_empleado, $id_actividad)
+    {
         $empleado = $this->empleadoService->findId($id_empleado);
 
         if($empleado){
@@ -111,7 +118,8 @@ class AdminController extends Controller
         return Redirect::back()->with('error', 'No se pudo encontrar al empleado');
     }
 
-    public function addEmpleadoActividad(EmpleadoActividadRequest $request){
+    public function addEmpleadoActividad(EmpleadoActividadRequest $request)
+    {
 
         $empleado = Empleado::find($request->input('id_empleado'));
 
@@ -128,58 +136,61 @@ class AdminController extends Controller
         Funciones para el registro y actualización de Empleados
     */
 
-    public function showEmpleados(){
-        $empleados = Empleado::all();
+    public function showEmpleados()
+    {
+        $empleados = $this->empleadoService->getAll();
         return view('admin.empleados', ['empleados' => $empleados]);
     }
 
-    public function newEmpleado(){
+    public function newEmpleado()
+    {
         return view('admin.addEmpleado');
     }
 
-    public function infoEmpleadoById($id){
+    public function infoEmpleadoById($id)
+    {
         $empleado = Empleado::with('especialidades')->find($id);
 
         // Obtén las especialidad no asignadas al Empleado
-        $especialidadesNoAsignadas = Especialidad::whereDoesntHave('empleados', function ($query) use ($id) {
-            $query->where('id_empleado', $id);
-        })->get();
+        $especialidadesNoAsignadas = $this->empleadoService->getEspecialidadesNoAsignadas($id);
 
         return view('admin.infoEmpleado', ['empleado' => $empleado, 'especialidadesNoAsignadas' => $especialidadesNoAsignadas]);
     }
 
-    public function addEmpleado(EmpleadoRequest $request){
-        Empleado::create($request->validated());
-
+    public function addEmpleado(EmpleadoRequest $request)
+    {
+        $this->empleadoService->create($request);
         return Redirect::route('showEmpleados');
     }
 
-    public function updateEmpleado($id){
-        $empleado = Empleado::find($id);
+    public function editEmpleado($id)
+    {
+        $empleado = $this->empleadoService->findId($id);
         return view('admin.updateEmpleado', ['empleado' => $empleado]);
     }
 
-    public function saveUpdateEmpleado(EmpleadoRequest $request, $id){
-        $empleado = Empleado::find($id);
-
-        $empleado->update([
-            'nombre' => $request->input('nombre'),
-            'email' => $request->input('email'),
-            'fecha_contratacion' => $request->input('fecha_contratacion'),
-        ]);
-
-        return Redirect::route('showEmpleados')->with('success', 'Empleado actualizado correctamente');
-    }
-
-    public function addEmpleadoEspecialidad(EmpleadoEspecialidadRequest $request){
-
-        $empleado = Empleado::find($request->input('id_empleado'));
+    public function UpdateEmpleado(EmpleadoRequest $request, $id)
+    {
+        $empleado = $this->empleadoService->findId($id);
 
         if (!$empleado){
             return redirect()->back()->with('error', 'Empleado no encontrado');
         }
 
-        $empleado->especialidades()->sync([$request->input('id_especialidad')], false);
+        $this->empleadoService->update($empleado, $request);
+
+        return redirect()->route('showEmpleados')->with('success', 'Empleado actualizado correctamente');
+    }
+
+    public function addEmpleadoEspecialidad(EmpleadoEspecialidadRequest $request)
+    {
+        $empleado = $this->empleadoService->findId($request->input('id_empleado'));
+
+        if (!$empleado){
+            return redirect()->back()->with('error', 'Empleado no encontrado');
+        }
+
+        $this->empleadoService->addEspecialidad($empleado, $request);
 
         return redirect()->back()->with('success', 'Especialidad agregada exitosamente al empleado');
     }

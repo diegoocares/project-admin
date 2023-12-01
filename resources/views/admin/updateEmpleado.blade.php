@@ -6,7 +6,7 @@
     <div class="container mt-5">
         <h2>Editar Empleado {{$empleado->nombre}}</h2>
 
-        <form action="{{ route('saveUpdateEmpleado', ['id' => $empleado->id]) }}" method="POST">
+        <form action="{{ route('UpdateEmpleado', ['id' => $empleado->id]) }}" method="POST">
             @csrf
             @method('PATCH')
             <div class="form-group">
